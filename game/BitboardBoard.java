@@ -536,6 +536,7 @@ public class BitboardBoard {
         int c = color.equals("white") ? WHITE : BLACK;
         int opp = c ^ 1;
         int kingSq = Long.numberOfTrailingZeros(pieces[c][KING]);
+        if (kingSq >= 64) return moves;
 
         long pinned = computePinned(c);
 
@@ -665,16 +666,16 @@ public class BitboardBoard {
 
         if ((to1Bit & allOccupancy) == 0) {
             if (to1 / 8 == promoRow) {
-                if ((pinRay & to1Bit) != 0) {
+                if ((pinRay & to1Bit) != 0 && isMoveLegal(from, to1, color)) {
                     addPromotionMoves(from, to1, color, moves);
                 }
             } else {
-                if ((pinRay & to1Bit) != 0) {
+                if ((pinRay & to1Bit) != 0 && isMoveLegal(from, to1, color)) {
                     moves.add(new BitMove(from, to1, -1, BitMove.FLAG_NONE, PAWN, -1, castlingRights, enPassantSquare, halfMoveClock, hash, false, -1, false, -1, -1));
                 }
                 int to2 = from + 2 * dir;
                 long to2Bit = 1L << to2;
-                if (from / 8 == startRow && (to2Bit & allOccupancy) == 0 && (pinRay & to2Bit) != 0) {
+                if (from / 8 == startRow && (to2Bit & allOccupancy) == 0 && (pinRay & to2Bit) != 0 && isMoveLegal(from, to2, color)) {
                     moves.add(new BitMove(from, to2, -1, BitMove.FLAG_NONE, PAWN, -1, castlingRights, enPassantSquare, halfMoveClock, hash, false, -1, false, -1, -1));
                 }
             }
@@ -686,9 +687,13 @@ public class BitboardBoard {
             captureTargets &= captureTargets - 1;
             if ((pinRay & (1L << to)) == 0) continue;
             if (to / 8 == promoRow) {
-                addPromotionMoves(from, to, color, moves);
+                if (isMoveLegal(from, to, color)) {
+                    addPromotionMoves(from, to, color, moves);
+                }
             } else {
-                moves.add(new BitMove(from, to, -1, BitMove.FLAG_NONE, PAWN, getPieceTypeAt(to), castlingRights, enPassantSquare, halfMoveClock, hash, false, -1, false, -1, -1));
+                if (isMoveLegal(from, to, color)) {
+                    moves.add(new BitMove(from, to, -1, BitMove.FLAG_NONE, PAWN, getPieceTypeAt(to), castlingRights, enPassantSquare, halfMoveClock, hash, false, -1, false, -1, -1));
+                }
             }
         }
 
@@ -723,6 +728,7 @@ public class BitboardBoard {
 
     private boolean isMoveLegal(int from, int to, int color) {
         int kingSq = Long.numberOfTrailingZeros(pieces[color][KING]);
+        if (kingSq >= 64) return false;
         int opp = color ^ 1;
         long movedPiece = 1L << from;
         long capturedPiece = 1L << to;
