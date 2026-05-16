@@ -1,8 +1,5 @@
-<<<<<<< HEAD
  A Bitboard-Based UCI Chess Engine
 =======
-
->>>>>>> 55b2c86 (update readme)
 
 A chess engine written from scratch in Java. It plays chess by searching through possible moves, evaluating positions, and picking the best one. It communicates via the **Universal Chess Interface (UCI)** protocol, making it compatible with any UCI-compatible chess GUI such as Arena, CuteChess, or Lichess.
 
