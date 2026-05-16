@@ -1,4 +1,4 @@
-DeepakChess - A Bitboard-Based UCI Chess Engine
+ A Bitboard-Based UCI Chess Engine
 
 ================================================================================
 
