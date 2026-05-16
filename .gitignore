@@ -1,0 +1,27 @@
+# Compiled output
+out/
+*.class
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.jar
+*.war
+*.zip
+
+# Logs
+*.log
+
+# Environment
+.env
